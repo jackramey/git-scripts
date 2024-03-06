@@ -1,0 +1,23 @@
+#!/bin/bash
+
+FORCE=false
+
+while getopts "f" opt; do
+    case "$opt" in
+    f)  FORCE=true
+        ;;
+    esac
+done
+
+# Check out master branch because we want to delete all the others
+git checkout master
+
+# Soft delete of all branches that aren't master
+if $FORCE; then
+    BRANCH_OPT=-D
+else
+    BRANCH_OPT=-d
+fi
+
+git branch | grep -v 'master' | xargs git branch $BRANCH_OPT
+
